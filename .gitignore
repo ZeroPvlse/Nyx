@@ -169,3 +169,6 @@ cython_debug/
 
 # PyPI configuration file
 .pypirc
+
+# project design and features to implement are here
+req_nyx.md 
