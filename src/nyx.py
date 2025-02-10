@@ -4,14 +4,20 @@ import os
 
 
 class Nyx:
+    __GREEN = "\033[92m"
+    __RED = "\033[5;31m"
+    __YELLOW = "\033[93m"
+    __BLUE = "\033[96m"
+
     def __init__(self, starting_function: Callable | None = None) -> None:
         """
-        Initialize argument parser.
+        Initializes the Nyx class and sets up the argument parser.
 
-        params:
-        starting_function -> function that will runn at the beginning of the program
-                            it can't take any input nor return any value.
-                            default value is None.
+        Parameters:
+        starting_function (Callable | None):
+            A function to be executed at the start of the program.
+            It cannot take input or return any values.
+            Default is None.
         """
         self._arguments = {}
         self._short_to_long = {}
@@ -28,16 +34,16 @@ class Nyx:
         self, long: str, short: str, description: str, required: bool = False
     ) -> None:
         """
-        Add arguments to run your cli app.
+        Adds an argument to the CLI application.
 
-        params:
-        long: str -> full parameter name.       example: --test, --run
-        short: str -> short parameter name.     example: -t, -r
-        desc: str -> parameter description.     example: "test currently running code"
-        required: bool -> is this parameter required to run.
-                 default value is False.
+        Parameters:
+        long (str): Full parameter name (e.g., --test, --run).
+        short (str): Short parameter name (e.g., -t, -r).
+        description (str): A brief description of the parameter (e.g., "test currently running code").
+        required (bool): Whether the parameter is mandatory. Default is False.
 
-        return -> None
+        Returns:
+        None
         """
         self._arguments[long] = {
             "description": description,
@@ -56,15 +62,14 @@ class Nyx:
 
     def parse_args(self, namespace=None) -> "Nyx | object":
         """
-        Check sys.argv for arguments defined using add_arg.
+        Parses the command-line arguments from sys.argv.
 
-        params:
-        namespace -> class that will have args sigined as it's attributes.
-                    default value is None.
-                    if default is None, Nyx will be used as namespace object
+        Parameters:
+        namespace (object | None): The class or object where arguments should be assigned as attributes.
+                                   If None, the current Nyx object will be used.
 
-        return -> if namespace has default value, then it returns Nyx object.
-                  else it will return any object that was passed to namespace
+        Returns:
+        Nyx | object: Returns the namespace object (Nyx or any passed object).
         """
         if namespace is None:
             namespace = self
@@ -83,7 +88,7 @@ class Nyx:
                         sys.argv[i + 2] if i + 1 < len(sys.argv) else self._print_help()
                     )
 
-                elif arg.startswith("-") and len(arg) == 2:
+                elif len(arg) == 2:
                     if arg == "-help":
                         self._print_help()
                         sys.exit(0)
@@ -103,44 +108,43 @@ class Nyx:
 
     def config(
         self,
-        description: str,
-        example_input: str,
+        description: str = "",
+        example_input: str = "",
         color_text: bool = False,
     ):
         """
-        Specify program description with example usage. this will execute
-        when -h or --help is called
+        Sets the program description, example usage, and color settings for output.
 
-        params:
-        description: str -> program description that will display at the
-                            very begginig of help window
+        Parameters:
+        description (str): A description of the program, shown at the start of the help screen.
+        example_input (str): Example program usage, excluding the filename.
+                             Format: '--test main.py --time True'.
+        color_text (bool): Whether to print colored text in logs. Default is False.
 
-        example_input: str -> example program usage.
-                            inclue just parameters and example inputs, excluding filename
-                            example:
-                            '--test main.py --time True'
-                            filename that calls this function is included by default
-
-        colored_output: bool -> should logs have colored text when printing.
-
+        Returns:
+        None
         """
         try:
-            example_input = str(example_input)
-            self._example_usage = example_input
+            self._example_usage = str(example_input)
         except ValueError:
             print(
-                f"example program usage must be a string but got {type(example_input)}"
+                f"Example program usage must be a string, but got {type(example_input)}"
             )
 
         try:
-            description = str(description)
-            self._program_description = description
+            self._program_description = str(description)
         except ValueError:
-            print(f"program description must be a string but got {type(example_input)}")
+            print(f"Program description must be a string, but got {type(description)}")
 
         self._colored_text = color_text
 
     def _print_help(self):
+        """
+        Prints the help message with program description, usage, and available options.
+
+        Returns:
+        None
+        """
         script_name = os.path.basename(sys.argv[0])
         print(
             f"""{self._program_description}
@@ -150,17 +154,21 @@ Usage: {script_name} {self._example_usage}
 Options:"""
         )
         for i in self._help_options:
-            if i == {}:
-                pass
-            else:
+            if i:
                 print(
                     f"\t--{i['long']},\t-{i['short']}\trequired: {i['required']}\t {i['description']}"
                 )
 
     def init(self, func: Callable) -> None:
         """
-        Display starting ascii art or literally anything else that should run at the beginning
-        passed in function doesn't take anything nor return anything
+        Executes the provided function at the start of the program.
+
+        Parameters:
+        func (Callable): The function to be run at the beginning.
+                          It should not accept any input or return anything.
+
+        Returns:
+        None
         """
         func()
 
@@ -176,42 +184,37 @@ Options:"""
             self._arguments[name] = value
 
     # the "cool ui part etc"
-    def success(self, log: str) -> None:
-        """
-        Prints out [✔] and log in green.
-        if nyx.config has colored_output=False then only "✔" is green
-        """
-        if self._colored_text:
-            print("\033[97m[\033[92m✔\033[97m] \033[92m" + log + "\033[97m")
+    def _print_log(
+        self, message: str, color: str, symbol: str, is_colored: bool
+    ) -> None:
+        white = "\033[97m"
+        if is_colored:
+            print(f"{white}[{color}{symbol}{white}] {color}{message}{white}")
         else:
-            print("\033[97m[\033[92m✔\033[97m] " + log + "\033[97m")
+            print(f"{white}[{color}{symbol}{white}] {white}{message}")
 
-    def error(self, log: str) -> None:
+    def _log_with_symbol(
+        self, log: str, color: str, symbol: str, color_text: bool
+    ) -> None:
         """
-        Prints out [✖] and log in red.
-        if nyx.config has colored_output=False then only "✖" is red
+        A helper method to reduce repetition for success, error, warning, and info methods.
+        This handles both colored and non-colored output logic.
         """
-        if self._colored_text:
-            print("\033[97m[\033[5;31m✖\033[97m] \033[5;31m" + log + "\033[97m")
-        else:
-            print("\033[97m[\033[5;31m✖\033[97m] " + log + "\033[97m")
+        is_colored = color_text if color_text is not None else self._colored_text
+        self._print_log(message=log, color=color, symbol=symbol, is_colored=is_colored)
 
-    def warning(self, log: str) -> None:
-        """
-        Prints out [!] and log in yellow.
-        if nyx.config has colored_output=False then only "!" is yellow
-        """
-        if self._colored_text:
-            print("\033[97m[\033[93m!\033[97m] \033[93m" + log + "\033[97m")
-        else:
-            print("\033[97m[\033[93m!\033[97m] " + log + "\033[97m")
+    def success(self, log: str, color_text=False) -> None:
+        """Prints out [✔] and log in green."""
+        self._log_with_symbol(log, self.__GREEN, "✔", color_text)
 
-    def info(self, log: str) -> None:
-        """
-        Prints out [*] and log in blue.
-        if nyx.config has colored_output=False then only "*" is blue
-        """
-        if self._colored_text:
-            print("\033[97m[\033[96m*\033[97m] \033[96m" + log + "\033[97m")
-        else:
-            print("\033[97m[\033[96m*\033[97m] " + log + "\033[97m")
+    def error(self, log: str, color_text=False) -> None:
+        """Prints out [✖] and log in red."""
+        self._log_with_symbol(log, self.__RED, "✖", color_text)
+
+    def warning(self, log: str, color_text=False) -> None:
+        """Prints out [!] and log in yellow."""
+        self._log_with_symbol(log, self.__YELLOW, "!", color_text)
+
+    def info(self, log: str, color_text=False) -> None:
+        """Prints out [*] and log in blue."""
+        self._log_with_symbol(log, self.__BLUE, "*", color_text)

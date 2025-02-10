@@ -8,6 +8,7 @@ def main():
     nyx.config(
         description="this is test tool",
         example_input="--arg test --desc 'sum text'",
+        color_text=True,
     )
     nyx.parse_args()
 
