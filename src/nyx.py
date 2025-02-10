@@ -97,41 +97,50 @@ class Nyx:
                 if arg_name and arg_name in self._arguments:
                     provided_args.add(arg_name)
 
-                    # check if the next value exists and is not another argument
-                    if i + 1 < len(sys.argv) - 1 and not sys.argv[i + 2].startswith(
-                        "-"
-                    ):
-                        arg_value = sys.argv[i + 2]
+                    next_arg_index = i + 1
+                    has_next_value = next_arg_index < len(
+                        sys.argv
+                    ) - 1 and not sys.argv[next_arg_index + 1].startswith("-")
+
+                    if has_next_value:
+                        arg_value = sys.argv[next_arg_index + 1]
                         self._arguments[arg_name]["value"] = arg_value
                         setattr(namespace, arg_name, arg_value)
                     else:
-                        if self._colored_text:
-                            print(
-                                f"{self.__RED}Error: Argument '--{arg_name}' requires a value but none was provided.{self.__GREEN}"
-                            )
+                        if self._arguments[arg_name]["required"]:
+                            if self._colored_text:
+                                print(
+                                    f"{self.__RED}Error: Argument '--{arg_name}' requires a value but none was provided.{self.__WHITE}"
+                                )
+                            else:
+                                print(
+                                    f"Error: Argument '--{arg_name}' requires a value but none was provided."
+                                )
+                            sys.exit(1)
                         else:
-                            print(
-                                f"{self.__WHITE}Error: Argument '--{arg_name}' requires a value but none was provided.{self.__WHITE}"
-                            )
+                            self._arguments[arg_name]["value"] = True
+                            setattr(namespace, arg_name, True)
 
-                        sys.exit(1)
-        # something is wrong in here fix it
-        # missing_args = [
-        #     arg
-        #     for arg, arg_data in self._arguments.items()
-        #     if arg_data["required"] and arg not in provided_args
-        # ]
-        #
-        # if missing_args:
-        #     if self._colored_text:
-        #         print(
-        #             f"{self.__RED}Error: The following required arguments are missing: {', '.join(missing_args)}{self.__WHITE}"
-        #         )
-        #     else:
-        #         print(
-        #             f"{self.__WHITE}Error: The following required arguments are missing: {', '.join(missing_args)}{self.__WHITE}"
-        #         )
-        #     sys.exit(1)
+        missing_args = []
+        for arg, details in self._arguments.items():
+            if (
+                isinstance(details, dict)
+                and details.get("required")
+                and arg not in provided_args
+            ):
+                missing_args.append(arg)
+
+        if missing_args:
+            if self._colored_text:
+                print(
+                    f"{self.__RED}Error: The following required arguments are missing: {', '.join(missing_args)}"
+                )
+            else:
+                print(
+                    f"Error: The following required arguments are missing: {', '.join(missing_args)}"
+                )
+
+            sys.exit(1)
 
         return namespace
 
