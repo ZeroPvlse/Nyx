@@ -8,6 +8,7 @@ class Nyx:
     __RED = "\033[5;31m"
     __YELLOW = "\033[93m"
     __BLUE = "\033[96m"
+    __WHITE = "\033[0;37m"
 
     def __init__(self, starting_function: Callable | None = None) -> None:
         """
@@ -71,11 +72,13 @@ class Nyx:
         Returns:
         Nyx | object: Returns the namespace object (Nyx or any passed object).
         """
+
         if namespace is None:
             namespace = self
 
-        arg_name = ""
-        arg_value = ""
+        arg_name = None
+        provided_args = set()
+
         for i, arg in enumerate(sys.argv[1:]):
             if arg.startswith("-"):
                 if arg.startswith("--"):
@@ -84,25 +87,51 @@ class Nyx:
                         sys.exit(0)
 
                     arg_name = arg.lstrip("-")
-                    arg_value = (
-                        sys.argv[i + 2] if i + 1 < len(sys.argv) else self._print_help()
-                    )
-
                 elif len(arg) == 2:
-                    if arg == "-help":
+                    if arg == "-h":
                         self._print_help()
                         sys.exit(0)
 
-                    short = arg.lstrip("-")
-                    arg_name = self._short_to_long.get(short)
-                    arg_value = (
-                        sys.argv[i + 2] if i + 1 < len(sys.argv) else self._print_help()
-                    )
+                    arg_name = self._short_to_long.get(arg.lstrip("-"))
 
                 if arg_name and arg_name in self._arguments:
-                    if arg_value:
+                    provided_args.add(arg_name)
+
+                    # check if the next value exists and is not another argument
+                    if i + 1 < len(sys.argv) - 1 and not sys.argv[i + 2].startswith(
+                        "-"
+                    ):
+                        arg_value = sys.argv[i + 2]
                         self._arguments[arg_name]["value"] = arg_value
                         setattr(namespace, arg_name, arg_value)
+                    else:
+                        if self._colored_text:
+                            print(
+                                f"{self.__RED}Error: Argument '--{arg_name}' requires a value but none was provided.{self.__GREEN}"
+                            )
+                        else:
+                            print(
+                                f"{self.__WHITE}Error: Argument '--{arg_name}' requires a value but none was provided.{self.__WHITE}"
+                            )
+
+                        sys.exit(1)
+        # something is wrong in here fix it
+        # missing_args = [
+        #     arg
+        #     for arg, arg_data in self._arguments.items()
+        #     if arg_data["required"] and arg not in provided_args
+        # ]
+        #
+        # if missing_args:
+        #     if self._colored_text:
+        #         print(
+        #             f"{self.__RED}Error: The following required arguments are missing: {', '.join(missing_args)}{self.__WHITE}"
+        #         )
+        #     else:
+        #         print(
+        #             f"{self.__WHITE}Error: The following required arguments are missing: {', '.join(missing_args)}{self.__WHITE}"
+        #         )
+        #     sys.exit(1)
 
         return namespace
 
@@ -187,11 +216,14 @@ Options:"""
     def _print_log(
         self, message: str, color: str, symbol: str, is_colored: bool
     ) -> None:
-        white = "\033[97m"
         if is_colored:
-            print(f"{white}[{color}{symbol}{white}] {color}{message}{white}")
+            print(
+                f"{self.__WHITE}[{color}{symbol}{self.__WHITE}] {color}{message}{self.__WHITE}"
+            )
         else:
-            print(f"{white}[{color}{symbol}{white}] {white}{message}")
+            print(
+                f"{self.__WHITE}[{color}{symbol}{self.__WHITE}] {self.__WHITE}{message}"
+            )
 
     def _log_with_symbol(
         self, log: str, color: str, symbol: str, color_text: bool
