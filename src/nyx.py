@@ -1,6 +1,9 @@
 from collections.abc import Callable
+from concurrent.futures import ThreadPoolExecutor
 import sys
 import os
+import socket
+import re
 
 
 class Nyx:
@@ -32,7 +35,12 @@ class Nyx:
         self._colored_text = False
 
     def add_arg(
-        self, long: str, short: str, description: str, required: bool = False
+        self,
+        long: str,
+        short: str,
+        description: str,
+        required: bool = False,
+        arg_type: str = None,  # pyright: ignore[reportArgumentType]
     ) -> None:
         """
         Adds an argument to the CLI application.
@@ -42,6 +50,7 @@ class Nyx:
         short (str): Short parameter name (e.g., -t, -r).
         description (str): A brief description of the parameter (e.g., "test currently running code").
         required (bool): Whether the parameter is mandatory. Default is False.
+        arg_type (str): Custom type like url, json, ip, file etc. Go to docs for more types.
 
         Returns:
         None
@@ -50,6 +59,7 @@ class Nyx:
             "description": description,
             "value": None,
             "required": required,
+            "type": arg_type,
         }
         self._short_to_long[short] = long
         self._help_options.append(
@@ -58,9 +68,11 @@ class Nyx:
                 "short": short,
                 "description": description,
                 "required": required,
+                "type": arg_type,
             }
         )
 
+    #
     def parse_args(self, namespace=None) -> "Nyx | object":
         """
         Parses the command-line arguments from sys.argv.
@@ -118,6 +130,7 @@ class Nyx:
                 arg_value = sys.argv[next_arg_index + 1]
                 self._arguments[arg_name]["value"] = arg_value
                 setattr(namespace, arg_name, arg_value)
+                self.validate_type(arg_name, arg_value)
             else:
                 if self._arguments[arg_name]["required"]:
                     self._print_error(
@@ -138,6 +151,7 @@ class Nyx:
                 f"The following required arguments are missing: {', '.join(missing_args)}"
             )
 
+    #
     def config(
         self,
         description: str = "",
@@ -191,6 +205,7 @@ Options:"""
                     f"\t--{i['long']},\t-{i['short']}\trequired: {i['required']}\t {i['description']}"
                 )
 
+    #
     def init(self, func: Callable) -> None:
         """
         Executes the provided function at the start of the program.
@@ -206,7 +221,7 @@ Options:"""
 
     def __getattr__(self, name):
         if name in self._arguments:
-            return self._arguments[name]
+            return self._arguments[name]["value"]
         raise AttributeError(f"'Nyx' object has no attribute '{name}'")
 
     def __setattr__(self, name, value):
@@ -255,3 +270,164 @@ Options:"""
     def info(self, log: str, color_text=False) -> None:
         """Prints out [*] and log in blue."""
         self._log_with_symbol(log, self.__BLUE, "*", color_text)
+
+    # this is bullshit
+    def validate_type(self, arg_name: str, value: str):
+        arg_type = self._arguments[arg_name].get("type")
+        if arg_type == "int" and not self._is_valid_int(value):
+            self._print_error(f"Invalid integer value for '{arg_name}': {value}")
+        elif arg_type == "float" and not self._is_valid_float(value):
+            self._print_error(f"Invalid float value for '{arg_name}': {value}")
+        elif arg_type == "str" and not self._is_valid_string(value):
+            self._print_error(f"Invalid string value for '{arg_name}': {value}")
+        elif arg_type == "url" and not self._is_valid_url(value):
+            self._print_error(f"Invalid URL provided for '{arg_name}': {value}")
+        elif arg_type == "ip" and not self._is_valid_ip(value):
+            self._print_error(f"Invalid IP address for '{arg_name}': {value}")
+        elif arg_type == "port" and not self._is_valid_port(value):
+            self._print_error(f"Invalid port for '{arg_name}': {value}")
+        elif arg_type == "file" and not os.path.isfile(value):
+            self._print_error(f"File does not exist or cannot be read: {value}")
+        elif arg_type == "dir" and not os.path.isdir(value):
+            self._print_error(f"Directory does not exist: {value}")
+        elif arg_type == "email" and not self._is_valid_email(value):
+            self._print_error(f"Invalid email address for '{arg_name}': {value}")
+
+    def _is_valid_url(self, url: str) -> bool:
+        """Validate URL with simple regex."""
+        regex = re.compile(
+            r"^(?:http|ftp)s?://"  # http:// or https://
+            r"(?:(?:[A-Z0-9](?:[A-Z0-9-]*[A-Z0-9])?\.)+(?:[A-Z]{2,6}\.?|[A-Z0-9-]*[A-Z0-9-]{2,}\.?)|"  # domain...
+            r"localhost|"  # localhost...
+            r"\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}|"  # ...or ipv4
+            r"\[?[A-F0-9]*:[A-F0-9:]+\]?)"  # or ipv6
+            r"(?::\d+)?"  # optional port
+            r"(?:/?|[/?]\S+)$",
+            re.IGNORECASE,
+        )
+        return re.match(regex, url) is not None
+
+    def _is_valid_int(self, value: str) -> bool:
+        try:
+            int(value)
+            return True
+        except ValueError:
+            return False
+
+    def _is_valid_float(self, value: str) -> bool:
+        try:
+            float(value)
+            return True
+        except ValueError:
+            return False
+
+    def _is_valid_string(self, value: str) -> bool:
+        return isinstance(value, str) and len(value) > 0
+
+    def _is_valid_ip(self, ip: str) -> bool:
+        """Validate if the input is valid IP address."""
+        try:
+            socket.inet_pton(socket.AF_INET, ip)
+            return True
+        except socket.error:
+            try:
+                socket.inet_pton(socket.AF_INET6, ip)
+                return True
+            except socket.error:
+                return False
+
+    def _is_valid_port(self, port: str) -> bool:
+        """Ensure the port is within the valid range (1-65535)."""
+        try:
+            port_num = int(port)
+            return 1 <= port_num <= 65535
+        except ValueError:
+            return False
+
+    def _is_valid_email(self, email: str) -> bool:
+        """Simple regex to check if email format is valid."""
+        return re.match(r"[^@]+@[^@]+\.[^@]+", email) is not None
+
+    # it would be cool to pass array of symbols
+    def interactive(self, symbol: str = "", color: str = "") -> None:
+        """
+        Use input field instead of sys args
+
+        params:
+        Symbol: str -> symbol that will appear when prompting for input
+
+        returns -> None
+        """
+        type_map = {
+            "int": "integer (e.g., 123)",
+            "float": "floating point number (e.g., 12.34)",
+            "string": "a string of text",
+            "url": "a valid URL (e.g., https://example.com)",
+            "ip": "a valid IP address (e.g., 192.168.1.1)",
+            "port": "a valid port number (1-65535)",
+            "file": "a valid file path (e.g., /path/to/file)",
+            "dir": "a valid directory path (e.g., /path/to/directory)",
+            "email": "a valid email address (e.g., user@example.com)",
+        }
+
+        if color is not None:
+            match color:
+                case "red":
+                    color = self.__RED
+                case "green":
+                    color = self.__GREEN
+                case "blue":
+                    color = self.__BLUE
+                case "yellow":
+                    color = self.__YELLOW
+                case _:
+                    color = ""
+
+        symbol = symbol if symbol != "" else "?"
+
+        color = color if color != "" else self.__GREEN
+
+        for arg, details in self._arguments.items():
+            if details["required"] and details["value"] is None:
+                while True:
+                    expected_type = details.get("type", "string")
+                    type_message = type_map.get(expected_type, "a string of text")
+
+                    if self._colored_text:
+                        user_input = input(
+                            f"[{color}{symbol}{self.__WHITE}] {self.__WHITE}Enter {arg} ({type_message}): "
+                        )
+                    else:
+                        user_input = input(f"[{symbol}] Enter {arg} ({type_message}): ")
+
+                    try:
+                        self.validate_type(arg, user_input)
+                        self._arguments[arg]["value"] = user_input
+                        setattr(self, arg, user_input)
+                        break
+                    except Exception as e:
+                        self._print_error(f"Error {str(e)}")
+
+    #
+    def run_async(self, func, *args, **kwargs):
+        """Run a function asynchronously with multiple threads."""
+        threads = kwargs.get("threads", 10)
+        with ThreadPoolExecutor(max_workers=threads) as executor:
+            future = executor.submit(func, *args, **kwargs)
+            return future.result()
+
+    #
+    def print_types(self):
+        """
+        Display supported types by arg_type argument
+        """
+        print("""
+int -> integer (e.g., 123)
+float -> floating point number (e.g., 12.34)
+string -> a string of text
+url -> a valid URL (e.g., https://example.com)
+ip -> a valid IP address (e.g., 192.168.1.1)
+port -> a valid port number (1-65535)
+file -> a valid file path (e.g., /path/to/file)
+dir -> a valid directory path (e.g., /path/to/directory)
+email -> a valid email address (e.g., user@example.com)""")
