@@ -72,7 +72,6 @@ class Nyx:
         Returns:
         Nyx | object: Returns the namespace object (Nyx or any passed object).
         """
-
         if namespace is None:
             namespace = self
 
@@ -80,69 +79,64 @@ class Nyx:
         provided_args = set()
 
         for i, arg in enumerate(sys.argv[1:]):
-            if arg.startswith("-"):
-                if arg.startswith("--"):
-                    if arg == "--help":
-                        self._print_help()
-                        sys.exit(0)
+            self._handle_help(arg)
+            arg_name = self._get_arg_name(arg)
+            self._process_argument(arg_name, i + 1, namespace, provided_args)  # pyright: ignore[reportArgumentType]
 
-                    arg_name = arg.lstrip("-")
-                elif len(arg) == 2:
-                    if arg == "-h":
-                        self._print_help()
-                        sys.exit(0)
-
-                    arg_name = self._short_to_long.get(arg.lstrip("-"))
-
-                if arg_name and arg_name in self._arguments:
-                    provided_args.add(arg_name)
-
-                    next_arg_index = i + 1
-                    has_next_value = next_arg_index < len(
-                        sys.argv
-                    ) - 1 and not sys.argv[next_arg_index + 1].startswith("-")
-
-                    if has_next_value:
-                        arg_value = sys.argv[next_arg_index + 1]
-                        self._arguments[arg_name]["value"] = arg_value
-                        setattr(namespace, arg_name, arg_value)
-                    else:
-                        if self._arguments[arg_name]["required"]:
-                            if self._colored_text:
-                                print(
-                                    f"{self.__RED}Error: Argument '--{arg_name}' requires a value but none was provided.{self.__WHITE}"
-                                )
-                            else:
-                                print(
-                                    f"Error: Argument '--{arg_name}' requires a value but none was provided."
-                                )
-                            sys.exit(1)
-                        else:
-                            self._arguments[arg_name]["value"] = True
-                            setattr(namespace, arg_name, True)
-
-        missing_args = []
-        for arg, details in self._arguments.items():
-            if (
-                isinstance(details, dict)
-                and details.get("required")
-                and arg not in provided_args
-            ):
-                missing_args.append(arg)
-
-        if missing_args:
-            if self._colored_text:
-                print(
-                    f"{self.__RED}Error: The following required arguments are missing: {', '.join(missing_args)}"
-                )
-            else:
-                print(
-                    f"Error: The following required arguments are missing: {', '.join(missing_args)}"
-                )
-
-            sys.exit(1)
-
+        self._check_missing_args(provided_args)
         return namespace
+
+    def _print_error(self, message: str):
+        if self._colored_text:
+            print(f"{self.__RED}Error: {message}{self.__WHITE}")
+        else:
+            print(f"Error: {message}")
+        sys.exit(1)
+
+    def _handle_help(self, arg: str):
+        if arg in ("--help", "-h"):
+            self._print_help()
+            sys.exit(0)
+
+    def _get_arg_name(self, arg: str):
+        if arg.startswith("--"):
+            return arg.lstrip("-")
+        elif len(arg) == 2:
+            return self._short_to_long.get(arg.lstrip("-"))
+        return None
+
+    def _process_argument(
+        self, arg_name: str, next_arg_index: int, namespace, provided_args: set
+    ):
+        if arg_name and arg_name in self._arguments:
+            provided_args.add(arg_name)
+            has_next_value = next_arg_index < len(sys.argv) - 1 and not sys.argv[
+                next_arg_index + 1
+            ].startswith("-")
+
+            if has_next_value:
+                arg_value = sys.argv[next_arg_index + 1]
+                self._arguments[arg_name]["value"] = arg_value
+                setattr(namespace, arg_name, arg_value)
+            else:
+                if self._arguments[arg_name]["required"]:
+                    self._print_error(
+                        f"Argument '--{arg_name}' requires a value but none was provided."
+                    )
+                else:
+                    self._arguments[arg_name]["value"] = True
+                    setattr(namespace, arg_name, True)
+
+    def _check_missing_args(self, provided_args: set):
+        missing_args = [
+            arg
+            for arg, details in self._arguments.items()
+            if details.get("required") and arg not in provided_args
+        ]
+        if missing_args:
+            self._print_error(
+                f"The following required arguments are missing: {', '.join(missing_args)}"
+            )
 
     def config(
         self,
