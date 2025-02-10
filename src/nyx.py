@@ -212,8 +212,10 @@ Options:"""
     def __setattr__(self, name, value):
         if name.startswith("_"):
             super().__setattr__(name, value)
+        elif name in self._arguments:
+            self._arguments[name]["value"] = value
         else:
-            self._arguments[name] = value
+            super().__setattr__(name, value)
 
     # the "cool ui part etc"
     def _print_log(
