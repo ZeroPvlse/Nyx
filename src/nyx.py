@@ -383,9 +383,8 @@ Options:"""
                 case _:
                     color = ""
 
-        symbol = symbol if symbol != "" else "?"
-
         color = color if color != "" else self.__GREEN
+        symbol = symbol if symbol != "" else "?"
 
         for arg, details in self._arguments.items():
             if details["required"] and details["value"] is None:
