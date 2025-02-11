@@ -17,17 +17,14 @@ def main():
         color_text=True,  # colorfull terminal ouptut
         theme="anon",  # more info in docs
     )
-    nyx.get_themes()
+    # nyx.get_themes()
     # nyx.get_types()
-    # nyx.parse_args()
-    nyx.interactive()
+    nyx.parse_args()
+    # nyx.interactive()
     nyx.success(f"running a scan on {nyx.website}", color_text=True)
     nyx.error("error")
     nyx.warning("warning")
     nyx.info("information")
-
-    # this doesn't work yet but looks like it should lmao
-    # nyx.run_async(scan_target, nyx.website, threads=nyx.threads)
 
 
 if __name__ == "__main__":
