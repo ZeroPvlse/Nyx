@@ -7,7 +7,7 @@
 To install **Nyx**, run:
 
 ```bash
-pip install nyx
+pip install nyx-cli
 ```
 
 ## Table of Contents
@@ -30,7 +30,7 @@ pip install nyx
 To use **Nyx**, first import it:
 
 ```python
-from nyx.src import Nyx
+from nyx.nyx import Nyx
 
 # Create a Nyx instance
 nyx = Nyx()
