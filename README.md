@@ -1,4 +1,4 @@
-# Nyx - CLI Library for Rapid Cybersecurity & Ethical Tool Development
+# Nyx - CLI Library for Rapid Cybersecurity & Ethical Hacking Tool Development
 
 **Nyx** is a zero-dependency, minimal-boilerplate Python library designed to simplify the development of CLI tools. It provides colorful and customizable output, custom argument types, and themes for enhanced user experience.
 
