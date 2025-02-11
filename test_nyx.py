@@ -25,6 +25,22 @@ def test_add_argument():
     assert nyx._Nyx__arguments["test"]["required"] is True
 
 
+def test_uppercase_args():
+    nyx = Nyx()
+
+    nyx.add_arg(
+        long="test",
+        short="t",
+        description="Test argument",
+        required=True,
+        arg_type="str",
+    )
+    sys.argv = ["program.py", "--TEST", "value"]
+
+    with pytest.raises(SystemExit):
+        nyx.parse_args()
+
+
 def test_parse_args_with_invalid_argument():
     nyx = Nyx()
 
@@ -260,3 +276,50 @@ def test_invalid_port():
 
     with pytest.raises(SystemExit):
         nyx.parse_args()
+
+
+def test_invalid_float():
+    nyx = Nyx()
+    nyx.add_arg(
+        long="float",
+        short="f",
+        description="Test argument",
+        required=True,
+        arg_type="float",
+    )
+    # http:// or https:// is REQUIRED to be valid url cuz i said so
+    sys.argv = ["program.py", "--url", "3,0"]
+
+    with pytest.raises(SystemExit):
+        nyx.parse_args()
+
+
+def test_invalid_directory():
+    nyx = Nyx()
+    nyx.add_arg(
+        long="dir",
+        short="d",
+        description="Test argument",
+        required=True,
+        arg_type="dir",
+    )
+    # http:// or https:// is REQUIRED to be valid url cuz i said so
+    sys.argv = ["program.py", "--dir", "some/random/path/that/doesn't/exist"]
+
+    with pytest.raises(SystemExit):
+        nyx.parse_args()
+
+
+def test_valid_directory():
+    nyx = Nyx()
+    nyx.add_arg(
+        long="directory",
+        short="d",
+        description="Test argument",
+        required=True,
+        arg_type="dir",
+    )
+    sys.argv = ["program.py", "--directory", "./src/"]
+
+    nyx.parse_args()
+    assert nyx.directory == "./src/"
