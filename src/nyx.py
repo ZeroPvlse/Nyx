@@ -1,5 +1,9 @@
 """CLI parser library designed for making hacking/pentesting tools"""
 
+# TODO: ADD CUSTOM THEMES IN THE FUTURE
+# TODO: FIX ASYNC
+# TODO: add auto type conversion
+
 import os
 import re
 import socket
@@ -449,7 +453,7 @@ Options:"""
                         self.__print_error(f"Error {str(e)}")
 
     #
-    def run_async(self, func, *args, **kwargs):
+    def __run_async(self, func, *args, **kwargs):
         """Run a function asynchronously with multiple threads."""
         threads = kwargs.get("threads", 10)
         with ThreadPoolExecutor(max_workers=threads) as executor:
