@@ -97,7 +97,7 @@ nyx.add_arg(
 nyx.interactive()  # Prompts user for input
 ```
 
-It's worth mentioning that optional arguments will be type checked if there weren't empty!
+It's worth mentioning that optional arguments will be type checked if they weren't empty!
 
 You can also customize the input symbol and its color:
 
