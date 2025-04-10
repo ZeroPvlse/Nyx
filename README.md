@@ -62,7 +62,7 @@ Nyxie-Wixie has super kawaii functions for stwuctuwd and cowor-coded wogging:
 
 ```python
 nyx = Nyx()
-nyx.config(theme="defauwt")  # Defauwt theme if not expwicitwy set uwu
+nyx.config(theme="default")  # Defauwt theme if not expwicitwy set uwu
 
 nyx.success("Hewwo wowld", color_text=False)  # Default: Gween
 nyx.error("Something bad happened (｡•́︿•̀｡)")  # Wed
@@ -81,7 +81,7 @@ nyx.info("Wandom infowmation OwO")  # Bwue
 
 ### Intewactive Mode (◕ᴗ◕✿)
 
-Nyxie-Wixie has a supew kawaii intewactive mode that asks usews for awguments:
+Nyxie-Wixie has a supew intewactive mode that asks usews for awguments:
 
 ```python
 nyx = Nyx()
@@ -102,7 +102,7 @@ Optionaw awguments will be type checked if they wewen't empty! So smart desu ne~
 You can awso customize the input symbow and its cowor:
 
 ```python
-nyx.interactive(symbol="♡", color="pink")  # Avaiwable cowors: wed, gween, bwue, yewwow (defauwt: white)
+nyx.interactive(symbol="♡", color="pink")  # Avaiwable cowors: red, green, blue, yellow (defauwt: white)
 ```
 
 ### Custom ASCII Awt
@@ -112,18 +112,15 @@ If you want to dispway ASCII awt befowe pwogwam execution, Nyxie-Wixie awwows yo
 ```python
 def print_ascii():
     print("""
-    ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣀⣀⣀⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-    ⠀⠀⠀⠀⠀⠀⣀⡴⠞⠛⠉⠉⠉⠉⠉⠛⠶⣄⡀⠀⠀⠀⠀⠀⠀
-    ⠀⠀⠀⠀⢀⡾⠋⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⢷⡀⠀⠀⠀⠀
-    ⠀⠀⠀⢠⡟⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⢿⡄⠀⠀⠀
-    ⠀⠀⢀⡟⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢻⡀⠀⠀
-    ⠀⠀⣼⠃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⣧⠀⠀
-    ⠀⠀⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⡀⠀  NYX-CHAN
-    ⠀⠀⣿⡄⠀⠀⠀⣠⣤⣤⣤⣤⣤⣤⣤⣤⣄⡀⠀⠀⠀⢠⣿⠁⠀
-    ⠀⠀⠹⣧⠀⠀⠀⠙⣿⣿⣿⣿⣿⣿⣿⡿⠋⠀⠀⠀⣠⡾⠃⠀⠀
-    ⠀⠀⠀⠘⢷⣄⠀⠀⠀⠉⠛⠛⠛⠛⠉⠀⠀⠀⣠⡾⠋⠀⠀⠀⠀
-    ⠀⠀⠀⠀⠀⠙⠷⣦⣄⡀⠀⠀⠀⠀⢀⣠⣴⠾⠋⠀⠀⠀⠀⠀⠀
-    ⠀⠀⠀⠀⠀⠀⠀⠀⠉⠛⠷⠶⠶⠾⠛⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⡀⠀⠀⠀⠀
+⠀⠀⠀⠀⢀⡴⣆⠀⠀⠀⠀⠀⣠⡀ ᶻ 𝗓 𐰁 .ᐟ ⣼⣿⡗⠀⠀⠀⠀
+⠀⠀⠀⣠⠟⠀⠘⠷⠶⠶⠶⠾⠉⢳⡄⠀⠀⠀⠀⠀⣧⣿⠀⠀⠀⠀⠀
+⠀⠀⣰⠃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢻⣤⣤⣤⣤⣤⣿⢿⣄⠀⠀⠀⠀
+⠀⠀⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣧⠀⠀⠀⠀⠀⠀⠙⣷⡴⠶⣦
+⠀⠀⢱⡀⠀⠉⠉⠀⠀⠀⠀⠛⠃⠀⢠⡟⠀⠀⠀⢀⣀⣠⣤⠿⠞⠛⠋
+⣠⠾⠋⠙⣶⣤⣤⣤⣤⣤⣀⣠⣤⣾⣿⠴⠶⠚⠋⠉⠁⠀⠀⠀⠀⠀⠀
+⠛⠒⠛⠉⠉⠀⠀⠀⣴⠟⢃⡴⠛⠋⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠛⠛⠋⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
     """)
 
 # Two ways to set a stawtup function:
