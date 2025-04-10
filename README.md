@@ -1,10 +1,15 @@
-# ✧･ﾟ: *✧･ﾟ Nyx CLI Libwawy ･ﾟ✧*:･ﾟ✧
-
-<p align="center">
-  <img src="nyxie-logo.png" alt="Nyxie-Wixie Logo" width="160" style="margin-bottom: 1rem;" />
-</p>
-
-**Nyxie-Wixie** is a supew-duper zero-dependency, smol-boilerpwate Python libwawy designed to make youw CLI tools suuuper kawaii desu~! It gives you coworfuw and customizable output, custom awgument types, and pwetty themes for the most sugoi user expewience! (✿◠‿◠)
+<table>
+  <tr>
+    <td width="200">
+      <img src="nyxie-logo.png" alt="Nyx Logo" width="300"/>
+    </td>
+    <td>
+      <h1 style="margin-left: 200px;">✧･ﾟ: *✧･ﾟ Nyx CLI Libwawy ･ﾟ✧*:･ﾟ✧</h1>
+      <p><em>Nyx is a supew-duper zero-dependency, smol-boilerpwate Python libwawy designed to make youw CLI tools suuuper kawaii desu~!<br>
+    It gives you coworfuw and customizable output, custom awgument types, and pwetty themes for the most sugoi user expewience! (✿◠‿◠)</em></p>
+    </td>
+  </tr>
+</table>
 
 ## ❀ Instawwation ❀
 
