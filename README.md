@@ -1,87 +1,87 @@
-# Nyx - CLI Library for Rapid Cybersecurity & Ethical Hacking Tool Development
+# ✧･ﾟ: *✧･ﾟ Nyx CLI Libwawy ･ﾟ✧*:･ﾟ✧
 
-**Nyx** is a zero-dependency, minimal-boilerplate Python library designed to simplify the development of CLI tools. It provides colorful and customizable output, custom argument types, and themes for enhanced user experience.
+**Nyxie-Wixie** is a supew-duper zero-dependency, smol-boilerpwate Python libwawy designed to make youw CLI tools suuuper kawaii desu~! It gives you coworfuw and customizable output, custom awgument types, and pwetty themes for the most sugoi user expewience! (✿◠‿◠)
 
-## Installation
+## ❀ Instawwation ❀
 
-To install **Nyx**, run:
+To instaww **Nyxie-Wixie**, wun this wittle command:
 
 ```bash
 pip install nyx-cli
 ```
 
-## Table of Contents
+## (づ￣ ³￣)づ Tabwe of Contents
 
-- [Installation](#installation)
-- [Examples](#examples)
-  - [Basic Usage](#basic-usage)
-  - [Custom Logging](#custom-logging)
-  - [Interactive Mode](#interactive-mode)
-  - [Custom ASCII Art](#custom-ascii-art)
-- [Features](#features)
-- [Documentation](#documentation)
-- [Contributing](#contributing)
-- [License](#license)
+- [❀ Instawwation ❀](#-instawwation-)
+- [✧･ﾟ Examples ･ﾟ✧](#-examples-)
+  - [Basic Usage uwu](#basic-usage-uwu)
+  - [Custom Wogging](#custom-wogging)
+  - [Intewactive Mode (◕ᴗ◕✿)](#intewactive-mode-)
+  - [Custom ASCII Awt](#custom-ascii-awt)
+- [★彡 Featuwes 彡★](#-featuwes-)
+- [✿ Documentation ✿](#-documentation-)
+- [(ﾉ◕ヮ◕)ﾉ*:･ﾟ✧ Contwibuting](#-contwibuting)
+- [Wicense UwU](#wicense-uwu)
 
-## Examples
+## ✧･ﾟ Examples ･ﾟ✧
 
-### Basic Usage
+### Basic Usage uwu
 
-To use **Nyx**, first import it:
+To use **Nyxie-Wixie**, fiwst impowt it wike dis:
 
 ```python
 from nyx.nyx import Nyx
 
-# Create a Nyx instance
+# Cweate a Nyx instance (so kawaiiiii)
 nyx = Nyx()
 
 nyx.add_arg(
-    long="example",
+    long="exampwe",
     short="e",
-    description="Custom example message",
-    required=True,  # Ensures this argument is mandatory
-    arg_type="str",  # Optional: Define expected type
+    description="Custom exampwe message desu~",
+    required=True,  # Dis makes it mandatowy uwu
+    arg_type="str",  # Optional: Define expected type-chan
 )
 
-# Configure Nyx (Displayed in help `-h` or `--help`)
+# Configure Nyx (Shows up in hewp `-h` or `--hewp`)
 nyx.config(
-    description="This is a test tool",
-    example_input="--example 'hi mum'",
+    description="Dis is a test toow (◕‿◕✿)",
+    example_input="--exampwe 'hewwo mummy~!'",
 )
 
-# Parse command-line arguments
+# Pawse command-wine awguments
 nyx.parse_args()
 
-# Access argument values as object attributes
-print(nyx.example)
+# Access awgument vawues as object attwiboots!
+print(nyx.exampwe)
 ```
 
-### Custom Logging
+### Custom Wogging
 
-Nyx provides functions for structured and color-coded logging:
+Nyxie-Wixie has super kawaii functions for stwuctuwd and cowor-coded wogging:
 
 ```python
 nyx = Nyx()
-nyx.config(theme="default")  # Default theme if not explicitly set, but this is optional
+nyx.config(theme="defauwt")  # Defauwt theme if not expwicitwy set uwu
 
-nyx.success("Hello world", color_text=False)  # Default: Green
-nyx.error("Something bad happened")  # Red
-nyx.warning("Watch out!")  # Yellow
-nyx.info("Random information")  # Blue
+nyx.success("Hewwo wowld", color_text=False)  # Default: Gween
+nyx.error("Something bad happened (｡•́︿•̀｡)")  # Wed
+nyx.warning("Watch owt senpai!")  # Yewwow
+nyx.info("Wandom infowmation OwO")  # Bwue
 ```
 
 #### Output:
 
 ```zsh
-  [✔] SUCCESS: Hello world
-  [✖] ERROR: Something bad happened
-  [!] WARNING: Watch out!
-  [*] INFO: Random information
+  [✔] SUCCESS: Hewwo wowld
+  [✖] ERROR: Something bad happened (｡•́︿•̀｡)
+  [!] WARNING: Watch owt senpai!
+  [*] INFO: Wandom infowmation OwO
 ```
 
-### Interactive Mode
+### Intewactive Mode (◕ᴗ◕✿)
 
-Nyx supports an interactive mode, prompting users for arguments:
+Nyxie-Wixie has a supew kawaii intewactive mode that asks usews for awguments:
 
 ```python
 nyx = Nyx()
@@ -89,50 +89,63 @@ nyx = Nyx()
 nyx.add_arg(
     long="website",
     short="w",
-    description="Website URL",
+    description="Website UWL pwease?",
     required=True,
     arg_type="url",
 )
 
-nyx.interactive()  # Prompts user for input
+nyx.interactive()  # Pwompts usew-chan for input
 ```
 
-It's worth mentioning that optional arguments will be type checked if they weren't empty!
+Optionaw awguments will be type checked if they wewen't empty! So smart desu ne~!
 
-You can also customize the input symbol and its color:
+You can awso customize the input symbow and its cowor:
 
 ```python
-nyx.interactive(symbol="&", color="red")  # Available colors: red, green, blue, yellow (default: white)
+nyx.interactive(symbol="♡", color="pink")  # Avaiwable cowors: wed, gween, bwue, yewwow (defauwt: white)
 ```
 
-### Custom ASCII Art
+### Custom ASCII Awt
 
-If you want to display ASCII art before program execution, Nyx allows you to set a startup function:
+If you want to dispway ASCII awt befowe pwogwam execution, Nyxie-Wixie awwows you to set a stawtup function:
 
 ```python
 def print_ascii():
-    print("Some ASCII art here")
+    print("""
+    ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣀⣀⣀⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+    ⠀⠀⠀⠀⠀⠀⣀⡴⠞⠛⠉⠉⠉⠉⠉⠛⠶⣄⡀⠀⠀⠀⠀⠀⠀
+    ⠀⠀⠀⠀⢀⡾⠋⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⢷⡀⠀⠀⠀⠀
+    ⠀⠀⠀⢠⡟⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⢿⡄⠀⠀⠀
+    ⠀⠀⢀⡟⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢻⡀⠀⠀
+    ⠀⠀⣼⠃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⣧⠀⠀
+    ⠀⠀⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⡀⠀  NYX-CHAN
+    ⠀⠀⣿⡄⠀⠀⠀⣠⣤⣤⣤⣤⣤⣤⣤⣤⣄⡀⠀⠀⠀⢠⣿⠁⠀
+    ⠀⠀⠹⣧⠀⠀⠀⠙⣿⣿⣿⣿⣿⣿⣿⡿⠋⠀⠀⠀⣠⡾⠃⠀⠀
+    ⠀⠀⠀⠘⢷⣄⠀⠀⠀⠉⠛⠛⠛⠛⠉⠀⠀⠀⣠⡾⠋⠀⠀⠀⠀
+    ⠀⠀⠀⠀⠀⠙⠷⣦⣄⡀⠀⠀⠀⠀⢀⣠⣴⠾⠋⠀⠀⠀⠀⠀⠀
+    ⠀⠀⠀⠀⠀⠀⠀⠀⠉⠛⠷⠶⠶⠾⠛⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀
+    """)
 
-# Two ways to set a startup function:
+# Two ways to set a stawtup function:
 nyx = Nyx(starting_function=print_ascii)  # Option 1
-nyx.init(print_ascii)  # Option 2
+nyx.init(print_ascii)  # Option 2 (≧◡≦)
 ```
 
-## Argument Handling
+## Awgument Handwing
 
-Nyx helps users by reminding them if they miss a required argument. If an argument is mandatory and not provided, Nyx will display an error message indicating which argument was missing. For example:
+Nyxie-Wixie hewps usews by weminding them if they miss a wequired awgument. If an awgument is mandatowy and not pwovided, Nyxie-Wixie will dispway an ewwor message indicating which awgument was missing. For exampwe:
 
 ```zsh
-Error: Argument '--website' requires a value but none was provided.
+Ewwor (╥﹏╥): Awgument '--website' wequires a vawue but none was pwovided.
 ```
 
-Example implementation:
+Exampwe impwementation:
 
 ```python
 nyx.add_arg(
     long="website",
     short="w",
-    description="Website URL",
+    description="Website UWL pwease?",
     required=True,
     arg_type="url",
 )
@@ -140,42 +153,42 @@ nyx.add_arg(
 nyx.parse_args()
 ```
 
-## Features
+## ★彡 Featuwes 彡★
 
-- **Zero dependency**: No external dependencies required
-- **Minimal boilerplate**: Easy-to-use API for rapid development
-- **Custom argument types**: Supports validation of argument types
-- **Interactive mode**: Automatically prompts for required arguments
-- **Theming support**: Customizable logging themes
-- **Colorized output**: Enables clear and structured CLI feedback
+- **Zewo dependency**: No extewnaw dependencies wequired! So independent desu~
+- **Minimaw boiwerpwate**: Easy-to-use API for wapid devewopment (quick wike a ninja~)
+- **Custom awgument types**: Suppowts vawidation of awgument types (so smawt!)
+- **Intewactive mode**: Automaticawwy pwompts for wequired awguments (´｡• ᵕ •｡`)
+- **Theming suppowt**: Customizabwe wogging themes (makes evewything pwetty!)
+- **Cowowized output**: Enabwes cweaw and stwuctuwd CLI feedback (rainbows evewywhere~)
 
-## Documentation
+## ✿ Documentation ✿
 
-To view supported argument types and available themes, use:
+To view suppowted awgument types and avaiwable themes, use these kawaii commands:
 
 ```python
-nyx.get_types()
-nyx.get_themes()
+nyx.get_types()  # Shows all the types-chan!
+nyx.get_themes()  # Shows all the pwetty themes!
 ```
 
-## Contributing
+## (ﾉ◕ヮ◕)ﾉ*:･ﾟ✧ Contwibuting
 
-We welcome contributions! To contribute:
-1. Fork the repository.
-2. Create a new branch (`git checkout -b feature-branch`).
-3. Commit your changes (`git commit -m "Add new feature"`).
-4. Push to the branch (`git push origin feature-branch`).
-5. Open a Pull Request.
+We wewcome contwibutions! To contwibute, fowwow these steps:
+1. Fowk the wepositori (≧◡≦)
+2. Cweate a new bwanch (`git checkout -b feature-branch-chan`)
+3. Commit youw changes (`git commit -m "Add new sugoi feature"`)
+4. Push to the bwanch (`git push origin feature-branch-chan`)
+5. Open a Puww Wequest and wait for sempai to notice you!
 
-Please ensure your code follows best practices and includes documentation where necessary.
+Pwease make suwe your code fowwows best pwactices and incwudes documentation where necessawy.
 
-## License
+## Wicense UwU
 
-**Nyx** is released under the MIT License. See the [LICENSE](LICENSE) file for details.
+**Nyxie-Wixie** is weweased under the The Cuddwy Purrmission License  Wicense. See the [WICENSE](LICENSE) fiwe for detaiws.
 
-## Notes
+## Notes (｡•́︿•̀｡)
 
-- **Argument Type Handling**: When using `arg_type` like `int`, `float`, etc., Nyx validates the input but returns it as a string. You must convert it back to the expected type.
-- **Async Support**: The `run_async` method is currently broken. Avoid using it in production.
+- **Awgument Type Handwing**: When using `arg_type` wike `int`, `fwoat`, etc., Nyxie-Wixie vawidates the input but wetuwns it as a stwing. You must convewt it back to the expected type.
+- **Async Suppowt**: The `run_async` method is currentwy bwoken (so sadge). Avoid using it in pwoduction.
 
-
+**Happy hacking with huggins, nya~!** (｡♥‿♥｡)ฅ^•ﻌ•^ฅ
